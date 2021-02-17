@@ -11,7 +11,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='PyTorch Language Model - Word-Similarity Test')
     parser.add_argument('--data', type=str, default='./data/wordsim353_sim_rel/wordsim_similarity_goldstandard.txt', help='location of the similarity file')
     parser.add_argument('--cuda', action='store_true', help='use CUDA')
-    parser.add_argument('--model', type=str, default='model.pt', help='path to the model')
+    parser.add_argument('--checkpoint', type=str, default='model.pt', help='path to the model')
     args = parser.parse_args()
 
     # =============== Load device ===============

@@ -1,25 +1,21 @@
-# Word-level language modeling RNN
+# Feed Forward Language Modeling
 
-This example trains a multi-layer RNN (Elman, GRU, or LSTM) on a language modeling task.
-By default, the training script uses the Wikitext-2 dataset, provided.
-The trained model can then be used by the generate script to generate new text.
+This example trains a 3-layer FNN on a language modeling task. The training script uses the Wikitext-2 dataset, provided.
+The trained model can then be used by the generate script to generate new text, and we compare the cosine similarity
+distribution with human made distributions, using the wordsim353 dataset, provided. 
+
+## Train language model
+
+The model will automatically use the cuDNN backend if run on CUDA with cuDNN installed.
+
+During training, if a keyboard interrupt (Ctrl-C) is received, training is stopped and the  current model will be evaluated against the test dataset.
 
 ```bash 
-python main.py --cuda --epochs 6           # Train a LSTM on Wikitext-2 with CUDA
-python main.py --cuda --epochs 6 --tied    # Train a tied LSTM on Wikitext-2 with CUDA
-python main.py --cuda --epochs 6 --model Transformer --lr 5   
-                                           # Train a Transformer model on Wikitext-2 with CUDA
-python main.py --cuda --tied               # Train a tied LSTM on Wikitext-2 with CUDA for 40 epochs
-python generate.py                         # Generate samples from the trained LSTM model.
-python generate.py --cuda --model Transformer
-                                           # Generate samples from the trained Transformer model.
+python main.py                                          # Train a model with default hyperparameters           
+python main.py --cuda --tied --save model_tied.pt       # Train a tied model with CUDA and save the model as model_tied.pt 
+python main.py --embed 300 --hidden 300 --lr 0.01       # Train a model with embedding and hidden dimension 300 using learning rate 0.01
+python main.py --data other_dataset                     # Train a model with other dataset
 ```
-
-The model uses the `nn.RNN` module (and its sister modules `nn.GRU` and `nn.LSTM`)
-which will automatically use the cuDNN backend if run on CUDA with cuDNN installed.
-
-During training, if a keyboard interrupt (Ctrl-C) is received,
-training is stopped and the current model is evaluated against the test dataset.
 
 The `main.py` script accepts the following arguments:
 
@@ -27,34 +23,56 @@ The `main.py` script accepts the following arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --data DATA           location of the data corpus
-  --model MODEL         type of recurrent net (RNN_TANH, RNN_RELU, LSTM, GRU,
-                        Transformer)
-  --emsize EMSIZE       size of word embeddings
-  --nhid NHID           number of hidden units per layer
-  --nlayers NLAYERS     number of layers
+  --embed EMBED         size of word embeddings
+  --hidden HIDDEN       number of hidden units per layer
   --lr LR               initial learning rate
-  --clip CLIP           gradient clipping
   --epochs EPOCHS       upper epoch limit
   --batch_size N        batch size
-  --bptt BPTT           sequence length
-  --dropout DROPOUT     dropout applied to layers (0 = no dropout)
+  --window_size W       sequence length
   --tied                tie the word embedding and softmax weights
   --seed SEED           random seed
   --cuda                use CUDA
   --log-interval N      report interval
-  --save SAVE           path to save the final model
-  --onnx-export ONNX_EXPORT
-                        path to export the final model in onnx format
-  --nhead NHEAD         the number of heads in the encoder/decoder of the
-                        transformer model
+  --save PATH           path to save the final model
 ```
 
-With these arguments, a variety of models can be tested.
-As an example, the following arguments produce slower but better models:
+## Generate texts
+After you trained the model, you can generate your own text using `generate.py`.
 
 ```bash
-python main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40           
-python main.py --cuda --emsize 650 --nhid 650 --dropout 0.5 --epochs 40 --tied    
-python main.py --cuda --emsize 1500 --nhid 1500 --dropout 0.65 --epochs 40        
-python main.py --cuda --emsize 1500 --nhid 1500 --dropout 0.65 --epochs 40 --tied 
+python generate.py                                      # Generate text from the trained model with default hyperparameter
+python generate.py --cuda --checkpoint ./model_tied.pt  # Generate text from the trained model with name model_tied.pt using CUDA
+python generate.py --outfile myfile --words 2000        # Generate text with 2000 words and store it to myfile
+```
+
+The `generate.py` script accepts the following arguments:
+
+```bash
+optional arguments:
+  -h, --help            show this help message and exit
+  --data                location of the data corpus
+  --checkpoint          model checkpoint to use
+  --outfile             output file for generated text
+  --words               number of words to generate
+  --seed                random seed
+  --cuda                use CUDA
+  --temperature         temperature - higher will increase diversity
+  --log-interval        reporting interval
+```
+
+## Spearman report
+To evaluate the model you trained, you can use `spearman.py` to check. 
+
+```bash
+python spearman.py                                  # Evaluate the model with default hyperparameter
+python spearman.py --cuda --model ./model_tied.pt   # Evaluate the model named model_tied.pt using CUDA
+```
+
+The `spearman.py` script accepts the following arguments:
+```bash
+optional arguments:
+  -h, --help            show this help message and exit
+  --data                location of the similarity file
+  --checkpoint          path to the model
+  --cuda                use CUDA
 ```

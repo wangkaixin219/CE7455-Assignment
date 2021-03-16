@@ -1,4 +1,4 @@
-# Feed Forward Language Modeling
+# Named Entity Recognition Language Modeling
 
 Named Entity Recognition (NER) is an important information extraction task that requires to identify and classify named entities in a given text. 
 These entity types are usually predefined like location, organization, person, and time. In this exercise, you will learn how to develop a neural NER model 

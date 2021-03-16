@@ -6,6 +6,12 @@ in Pytorch.
 
 ## Train language model
 
+Before running the code, remember to download the word embedding file by the following command
+
+```bash
+wget http://nlp.stanford.edu/data/glove.6B.zip
+```
+
 The model will automatically use the cuDNN backend if run on CUDA with cuDNN installed.
 
 ```bash 

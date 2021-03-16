@@ -13,10 +13,10 @@ The model will automatically use the cuDNN backend if run on CUDA with cuDNN ins
 python main.py --cuda --crf --char_encoder LSTM --word_encoder CNN      
 
 # Train a model with CNN character-level, 2-layer CNN word-level encoder, CRF decoder
-python main.py --cuda --crf --char_encoder CNN -- word_encoder CNN2     
+python main.py --cuda --crf --char_encoder CNN --word_encoder CNN2     
 
 # Train a model with CNN character-level, dilated CNN word-level encoder, Softmax decoder
-python main.py --cuda --char_encoder CNN -- word_encoder CNN_DILATED     
+python main.py --cuda --char_encoder CNN --word_encoder CNN_DILATED     
 ```
 
 The `main.py` script accepts the following arguments:

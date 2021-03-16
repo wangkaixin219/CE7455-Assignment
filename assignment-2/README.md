@@ -6,7 +6,8 @@ in Pytorch.
 
 ## Train language model
 
-Before running the code, remember to download the word embedding file by the following command
+Before running the code, remember to download the word embedding file by the following command. Then, move and unzip it into your customized directory. 
+By default, the embedding directory is a subfolder under the data/ directory.
 
 ```bash
 wget http://nlp.stanford.edu/data/glove.6B.zip

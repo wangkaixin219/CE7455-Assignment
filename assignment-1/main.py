@@ -27,7 +27,7 @@ def evaluate(data_source):
     total_loss = 0.
 
     with torch.no_grad():
-        for i in range(0, data_source.size(0) - 1, args.bptt):
+        for i in range(0, data_source.size(0) - 1, args.batch_size):
             inputs, targets = get_batch(data_source, i)
             outputs = model(inputs)
             outputs = outputs.view(-1, n_tokens)
@@ -41,7 +41,7 @@ def train():
     total_loss = 0.
     start_time = time.time()
 
-    for batch, i in enumerate(range(0, train_data.size(0) - 1, args.bptt)):
+    for batch, i in enumerate(range(0, train_data.size(0) - 1, args.batch_size)):
         inputs, targets = get_batch(train_data, i)
         outputs = model(inputs)
         outputs = outputs.view(-1, n_tokens)
@@ -57,7 +57,7 @@ def train():
             cur_loss = total_loss / args.log_interval
             elapsed = time.time() - start_time
             print('| epoch {:3d} | {:5d}/{:5d} batches | lr {:02.4f} | ms/batch {:5.2f} | loss {:5.2f} | ppl {:8.2f}'
-                  .format(epoch, batch, len(train_data) // args.bptt, optimizer.param_groups[0]['lr'],
+                  .format(epoch, batch, len(train_data) // args.batch_size, optimizer.param_groups[0]['lr'],
                           elapsed * 1000 / args.log_interval, cur_loss, math.exp(cur_loss)))
             total_loss = 0
             start_time = time.time()

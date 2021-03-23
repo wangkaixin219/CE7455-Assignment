@@ -10,7 +10,10 @@ Before running the code, remember to download the word embedding file by the fol
 By default, the embedding directory is a subfolder under the data/ directory.
 
 ```bash
+mkdir data/embedding/
+cd data/embedding/
 wget http://nlp.stanford.edu/data/glove.6B.zip
+unzip glove.6B.zip
 ```
 
 The model will automatically use the cuDNN backend if run on CUDA with cuDNN installed.

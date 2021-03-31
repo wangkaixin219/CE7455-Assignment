@@ -1,7 +1,7 @@
 #  Neural Machine Translation
 
 This example trains a Seq2Seq model with attention. The dataset for this exercise is a machine translation dataset provided by Pytorch tutorial. 
-The dataset includes 135,842 English-French sentence pairs. We read the text from the file line by line, and split a line into two parts by `\t', 
+The dataset includes 135,842 English-French sentence pairs. We read the text from the file line by line, and split a line into two parts by '\t', 
 one of which is English sentence and the other is French one. 
 
 ## Train language model
